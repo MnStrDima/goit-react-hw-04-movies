@@ -6,13 +6,13 @@
     "name": "Dmitriy Medychenko",
     "email": "rAv3ndima91@gmail.com"
   },
-  "homepage": "https://mnstrdima.github.io/goit-react-hw-04-movies/",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.6.3",
     "axios": "^0.21.1",
     "modern-normalize": "^1.0.0",
+    "npx": "^10.2.2",
     "prop-types": "^15.7.2",
     "query-string": "^6.13.8",
     "react": "^17.0.1",
@@ -30,7 +30,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "netlify deploy -p"
   },
   "eslintConfig": {
     "extends": [
