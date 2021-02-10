@@ -1,0 +1,47 @@
+.movieDetailsSection {
+  background-color: lightpink;
+}
+.infoWrapper {
+  display: flex;
+}
+
+.backButton {
+  width: 100%;
+  display: inline-block;
+  height: 30px;
+  border: 0;
+  opacity: 0.7;
+  transition: opacity 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  outline: none;
+  background-color: #ffffff;
+}
+
+.backButton:hover {
+  opacity: 1;
+}
+
+.imgWrapper {
+  margin: 0 10px 0 0;
+}
+.mainInfoContainer {
+  padding: 10px;
+  color: #ffffff;
+}
+.description {
+  font-style: italic;
+}
+.sectionTitle {
+  color: grey;
+  margin: 5px 0;
+}
+.genresList {
+  width: 30vw;
+  list-style: square;
+  display: flex;
+  justify-content: space-evenly;
+}
+.genresListItem {
+}
+.genre {
+}

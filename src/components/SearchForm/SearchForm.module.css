@@ -1,9 +1,13 @@
+.formWrapper {
+  background-color: lightpink;
+}
+
 .SearchForm {
   display: flex;
   align-items: center;
   width: 100%;
-  max-width: 600px;
-  background-color: #fff;
+  max-width: 350px;
+  background-color: lightpink;
   border-radius: 3px;
   overflow: hidden;
 }

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Component } from 'react';
-import { Link } from 'react-router-dom';
+import MoviesList from '../components/MoviesList/MoviesList';
+import { pageTitles } from '../utils/pageTitles';
 
 const API_KEY = '138e32556a4bf40175aa9261e110ed29';
 
@@ -18,14 +19,10 @@ class HomePage extends Component {
   render() {
     return (
       <>
-        <h1> Homepage </h1>
-        <ul>
-          {this.state.movies.map(movie => (
-            <li key={movie.id}>
-              <Link to={`/movies/${movie.id}`}>{movie.title}</Link>
-            </li>
-          ))}
-        </ul>
+        <MoviesList
+          movies={this.state.movies}
+          pageTitle={pageTitles.TRENDING}
+        />
       </>
     );
   }

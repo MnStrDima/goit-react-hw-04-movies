@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import CastList from '../components/CastList/CastList';
 
 const API_KEY = '138e32556a4bf40175aa9261e110ed29';
-const BASE_IMG_URL = 'https://image.tmdb.org/t/p/w500';
 
 class Cast extends Component {
   state = {
@@ -23,24 +23,7 @@ class Cast extends Component {
   render() {
     return (
       <>
-        <ul>
-          {this.state.cast.map(actor => (
-            <li key={actor.id}>
-              {actor.profile_path && (
-                <div className="actorPhotoWrapper">
-                  <img
-                    src={`${BASE_IMG_URL}${actor.profile_path}`}
-                    alt="posterWithActor"
-                    width="100"
-                  />
-                </div>
-              )}
-
-              <span>{actor.name}</span>
-              <span>Character: {actor.character}</span>
-            </li>
-          ))}
-        </ul>
+        <CastList cast={this.state.cast} />
       </>
     );
   }

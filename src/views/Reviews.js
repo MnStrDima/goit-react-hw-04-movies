@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import ReviewsList from '../components/ReviewsList/ReviewsList';
 
 const API_KEY = '138e32556a4bf40175aa9261e110ed29';
 
@@ -22,18 +23,7 @@ class Reviews extends Component {
   render() {
     return (
       <>
-        {this.state.reviews.length > 0 ? (
-          <ul>
-            {this.state.reviews.map(review => (
-              <li key={review.id}>
-                <h4>Author: {review.author}</h4>
-                <p>{review.content}</p>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          "We don't have any reviews for this movie."
-        )}
+        <ReviewsList reviews={this.state.reviews} />
       </>
     );
   }

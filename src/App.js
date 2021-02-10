@@ -1,32 +1,45 @@
-import React from 'react';
-import { Switch, Route, NavLink } from 'react-router-dom';
+import React, { Suspense, lazy } from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
+import Loader from 'react-loader-spinner';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import HomePage from './views/HomePage';
-import MoviesPage from './views/MoviesPage';
-import MovieDetailsPage from './views/MovieDetailsPage';
-import NotFoundView from './views/NotFoundView';
+
+import { routes } from './routes';
+import AppBar from './components/AppBar/AppBar';
+
+const HomePage = lazy(() =>
+  import('./views/HomePage' /* webpackChunkName: "home-page"*/),
+);
+const MoviesPage = lazy(() =>
+  import('./views/MoviesPage' /* webpackChunkName: "movies-page"*/),
+);
+const MovieDetailsPage = lazy(() =>
+  import(
+    './views/MovieDetailsPage' /* webpackChunkName: "movies-details-page"*/
+  ),
+);
 
 const App = () => (
   <>
-    <ul>
-      <li>
-        <NavLink exact to="/">
-          Home
-        </NavLink>
-      </li>
-      <li>
-        <NavLink to="/movies">Movies</NavLink>
-      </li>
-    </ul>
-
-    <Switch>
-      <Route path="/" exact component={HomePage} />
-      <Route path="/movies" exact component={MoviesPage} />
-      <Route path="/movies/:movieId" component={MovieDetailsPage} />
-
-      <Route component={NotFoundView} />
-    </Switch>
+    <AppBar />
+    <Suspense
+      fallback={
+        <Loader
+          className="loader"
+          type="ThreeDots"
+          color="#3f51b5"
+          height={100}
+          width={100}
+        />
+      }
+    >
+      <Switch>
+        <Route path={routes.homePage} exact component={HomePage} />
+        <Route path={routes.moviesPage} exact component={MoviesPage} />
+        <Route path={routes.movieDetailsPage} component={MovieDetailsPage} />
+        <Redirect to={routes.homePage} />
+      </Switch>
+    </Suspense>
     <ToastContainer />
   </>
 );
