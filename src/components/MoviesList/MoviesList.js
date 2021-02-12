@@ -1,9 +1,8 @@
 import { Link, withRouter } from 'react-router-dom';
-import styles from './MoviesList.module.css';
-import NoImageBlank from '../../assets/noImageBlank/Noimage.png';
 import PropTypes from 'prop-types';
-
-const BASE_IMG_URL = 'https://image.tmdb.org/t/p/w500';
+import styles from './MoviesList.module.css';
+import BlankImageLoader from '../BlankImageLoader/BlankImageLoader';
+import BASE_IMG_URL from '../../utils/baseImgUrlforFetching';
 
 const MoviesList = ({ movies, location, pageTitle }) => {
   return (
@@ -22,7 +21,7 @@ const MoviesList = ({ movies, location, pageTitle }) => {
                 {poster_path ? (
                   <img src={`${BASE_IMG_URL}${poster_path}`} alt="poster" />
                 ) : (
-                  <img src={NoImageBlank} alt="poster" />
+                  <BlankImageLoader />
                 )}
 
                 <span className={styles.movieTitle}>{title}</span>

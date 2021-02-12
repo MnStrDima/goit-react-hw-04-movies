@@ -48,3 +48,10 @@
 .info:first-child {
   color: #000;
 }
+
+.content {
+  line-height: 1.5;
+  padding: 20px;
+  margin: 0;
+  color: #fff;
+}

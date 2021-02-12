@@ -1,31 +1,31 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import ReviewsList from '../components/ReviewsList/ReviewsList';
-
-const API_KEY = '138e32556a4bf40175aa9261e110ed29';
+import fetchAPI from '../services/moviesFetchAPI';
 
 class Reviews extends Component {
   state = {
     reviews: [],
+    error: null,
   };
 
   async componentDidMount() {
     const { movieId } = this.props.match.params;
-    const response = await axios.get(
-      `https://api.themoviedb.org/3/movie/${movieId}/reviews?api_key=${API_KEY}&language=en-US`,
-    );
-    const reviews = response.data.results;
-    await this.setState({
-      reviews,
-    });
+    this.fetchReviews(movieId);
   }
 
+  fetchReviews = async movieId => {
+    try {
+      await fetchAPI
+        .fetchReviewsById(movieId)
+        .then(({ results }) => this.setState({ reviews: results }));
+    } catch (error) {
+      this.setState({ error: error.message });
+    }
+  };
+
   render() {
-    return (
-      <>
-        <ReviewsList reviews={this.state.reviews} />
-      </>
-    );
+    const { reviews, error } = this.state;
+    return <>{error ? <p>{error}</p> : <ReviewsList reviews={reviews} />}</>;
   }
 }
 export default Reviews;

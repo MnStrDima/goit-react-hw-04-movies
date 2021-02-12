@@ -1,16 +1,19 @@
-import { NavLink, Route } from 'react-router-dom';
+import { NavLink, Route, withRouter } from 'react-router-dom';
 import Cast from '../../views/Cast';
 import Reviews from '../../views/Reviews';
 import styles from './AdditionalInfo.module.css';
 import PropTypes from 'prop-types';
 
-const AdditionalInfo = ({ url, path }) => {
+const AdditionalInfo = ({ url, path, locationState }) => {
   return (
     <>
       <ul className={styles.additionalInfo}>
         <li>
           <NavLink
-            to={`${url}/cast`}
+            to={{
+              pathname: `${url}/cast`,
+              state: { ...locationState },
+            }}
             className={styles.link}
             activeClassName={styles.activeLink}
           >
@@ -19,7 +22,10 @@ const AdditionalInfo = ({ url, path }) => {
         </li>
         <li>
           <NavLink
-            to={`${url}/reviews`}
+            to={{
+              pathname: `${url}/reviews`,
+              state: { ...locationState },
+            }}
             className={styles.link}
             activeClassName={styles.activeLink}
           >
@@ -32,9 +38,10 @@ const AdditionalInfo = ({ url, path }) => {
     </>
   );
 };
-export default AdditionalInfo;
+export default withRouter(AdditionalInfo);
 
 AdditionalInfo.propTypes = {
   url: PropTypes.string.isRequired,
   path: PropTypes.string.isRequired,
+  locationFrom: PropTypes.string.isRequired,
 }.isRequired;

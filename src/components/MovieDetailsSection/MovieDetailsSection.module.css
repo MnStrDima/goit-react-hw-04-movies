@@ -1,5 +1,5 @@
 .movieDetailsSection {
-  background-color: lightpink;
+  background-color: #ffb6c1;
 }
 .infoWrapper {
   display: flex;
@@ -38,8 +38,6 @@
 .genresList {
   width: 30vw;
   list-style: square;
-  display: flex;
-  justify-content: space-evenly;
 }
 .genresListItem {
 }

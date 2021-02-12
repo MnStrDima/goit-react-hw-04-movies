@@ -1,31 +1,31 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import CastList from '../components/CastList/CastList';
-
-const API_KEY = '138e32556a4bf40175aa9261e110ed29';
+import fetchAPI from '../services/moviesFetchAPI';
 
 class Cast extends Component {
   state = {
     cast: [],
+    error: null,
   };
 
-  async componentDidMount() {
+  componentDidMount() {
     const { movieId } = this.props.match.params;
-    const response = await axios.get(
-      `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${API_KEY}&language=en-US`,
-    );
-    const cast = response.data.cast;
-    await this.setState({
-      cast: cast,
-    });
+    this.fetchCast(movieId);
   }
 
+  fetchCast = async movieId => {
+    try {
+      fetchAPI
+        .fetchCastById(movieId)
+        .then(({ cast }) => this.setState({ cast }));
+    } catch (error) {
+      this.setState({ error: error.message });
+    }
+  };
+
   render() {
-    return (
-      <>
-        <CastList cast={this.state.cast} />
-      </>
-    );
+    const { cast, error } = this.state;
+    return <>{error ? <p>{error}</p> : <CastList cast={cast} />}</>;
   }
 }
 export default Cast;

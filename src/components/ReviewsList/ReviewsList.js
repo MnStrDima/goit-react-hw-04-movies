@@ -1,5 +1,5 @@
-import styles from './ReviewsList.module.css';
 import PropTypes from 'prop-types';
+import styles from './ReviewsList.module.css';
 
 const ReviewsList = ({ reviews }) => {
   return reviews.length > 0 ? (

@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { routes } from '../../routes';
+import routes from '../../routes';
 import styles from './Navigation.module.css';
 
 const Navigation = () => {

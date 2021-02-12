@@ -1,57 +1,67 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import { toast } from 'react-toastify';
+import Preloader from '../components/Preloader/Preloader';
 import getQueryParams from '../utils/getQueryParams';
-
 import SearchForm from '../components/SearchForm/SearchForm';
 import MoviesList from '../components/MoviesList/MoviesList';
 import { pageTitles } from '../utils/pageTitles';
-
-const API_KEY = '138e32556a4bf40175aa9261e110ed29';
+import routes from '../routes';
+import fetchAPI from '../services/moviesFetchAPI';
 
 class MoviesPage extends Component {
   state = {
     movies: [],
+    isLoading: true,
     isSearching: false,
+    error: null,
   };
 
-  async componentDidMount() {
+  componentDidMount() {
     const { query } = getQueryParams(this.props.location.search);
     if (query) {
-      return this.fetchMovies(query);
+      this.setState({ isSearching: true });
+      this.fetchMovies(query);
+      return;
     }
-    this.statusToggler();
     this.fetchPopularMovies();
   }
 
-  async componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState) {
     const { query: prevQuery } = getQueryParams(prevProps.location.search);
     const { query: nextQuery } = getQueryParams(this.props.location.search);
 
     if (prevQuery !== nextQuery && nextQuery) {
       this.fetchMovies(nextQuery);
-      this.statusToggler();
+      this.setState({ isSearching: true });
       return;
     }
   }
 
-  statusToggler = () => {
-    this.setState({ isSearching: !this.state.isSearching });
-  };
-
   fetchMovies = async query => {
-    const response = await axios.get(
-      `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&language=en-US&page=1&include_adult=true&query=${query}`,
-    );
-    const movies = response.data.results;
-    await this.setState({ movies });
+    this.setState({ isLoading: true });
+    try {
+      await fetchAPI.fetchByQuery(query).then(({ results }) => {
+        if (results.length === 0) {
+          toast("Sorry, but we can't find anything for your query.");
+          this.props.history.push(routes.moviesPage);
+          return;
+        }
+        this.setState({ movies: results, isLoading: false });
+      });
+    } catch (error) {
+      this.setState({ error: error.message, isLoading: false });
+    }
   };
 
   fetchPopularMovies = async () => {
-    const response = await axios.get(
-      `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`,
-    );
-    const movies = response.data.results;
-    await this.setState({ movies });
+    this.setState({ isLoading: false });
+    try {
+      await fetchAPI.fetchPopular().then(({ results }) => {
+        this.setState({ movies: results });
+      });
+    } catch (error) {
+      this.setState({ error: error.message, isLoading: false });
+    }
   };
 
   handleFormSubmit = searchQuery => {
@@ -62,20 +72,18 @@ class MoviesPage extends Component {
   };
 
   render() {
+    const { isLoading, isSearching, error, movies } = this.state;
     return (
       <>
         <SearchForm onSubmit={this.handleFormSubmit} />
-        {this.state.isSearching ? (
-          <MoviesList
-            movies={this.state.movies}
-            pageTitle={pageTitles.POPULAR}
-          />
+        {isLoading ? (
+          <Preloader />
+        ) : isSearching ? (
+          <MoviesList movies={movies} pageTitle={pageTitles.RESULT} />
         ) : (
-          <MoviesList
-            movies={this.state.movies}
-            pageTitle={pageTitles.RESULT}
-          />
+          <MoviesList movies={movies} pageTitle={pageTitles.POPULAR} />
         )}
+        {error && <h1> {error}</h1>}
       </>
     );
   }

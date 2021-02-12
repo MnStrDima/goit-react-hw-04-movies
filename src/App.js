@@ -1,10 +1,10 @@
 import React, { Suspense, lazy } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import Loader from 'react-loader-spinner';
+import Preloader from './components/Preloader/Preloader';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { routes } from './routes';
+import routes from './routes';
 import AppBar from './components/AppBar/AppBar';
 
 const HomePage = lazy(() =>
@@ -22,17 +22,7 @@ const MovieDetailsPage = lazy(() =>
 const App = () => (
   <>
     <AppBar />
-    <Suspense
-      fallback={
-        <Loader
-          className="loader"
-          type="ThreeDots"
-          color="#3f51b5"
-          height={100}
-          width={100}
-        />
-      }
-    >
+    <Suspense fallback={<Preloader />}>
       <Switch>
         <Route path={routes.homePage} exact component={HomePage} />
         <Route path={routes.moviesPage} exact component={MoviesPage} />
@@ -40,7 +30,17 @@ const App = () => (
         <Redirect to={routes.homePage} />
       </Switch>
     </Suspense>
-    <ToastContainer />
+    <ToastContainer
+      position="top-center"
+      autoClose={3000}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+    />
   </>
 );
 
