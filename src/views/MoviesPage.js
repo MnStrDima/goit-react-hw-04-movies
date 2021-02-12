@@ -44,6 +44,7 @@ class MoviesPage extends Component {
         if (results.length === 0) {
           toast("Sorry, but we can't find anything for your query.");
           this.props.history.push(routes.moviesPage);
+          this.setState({ isLoading: false });
           return;
         }
         this.setState({ movies: results, isLoading: false });
