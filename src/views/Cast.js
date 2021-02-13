@@ -8,16 +8,22 @@ class Cast extends Component {
     error: null,
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     const { movieId } = this.props.match.params;
-    this.fetchCast(movieId);
+    await this.fetchCast(movieId);
   }
 
   fetchCast = async movieId => {
     try {
-      fetchAPI
-        .fetchCastById(movieId)
-        .then(({ cast }) => this.setState({ cast }));
+      const response = await fetchAPI.fetchCastById(movieId);
+      if (response.ok) {
+        const data = await response.json();
+        const { cast } = data;
+        return this.setState({ cast });
+      }
+      return Promise.reject(
+        new Error(`Sorry. Something went wrong. Can't find anything.`),
+      );
     } catch (error) {
       this.setState({ error: error.message });
     }

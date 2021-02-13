@@ -10,17 +10,21 @@ class HomePage extends Component {
     isLoading: true,
     error: null,
   };
-  componentDidMount() {
-    this.fetchTrendingMovies();
+  async componentDidMount() {
+    await this.fetchTrendingMovies();
   }
 
   fetchTrendingMovies = async () => {
     try {
-      fetchAPI
-        .fetchTrending()
-        .then(({ results }) =>
-          this.setState({ movies: results, isLoading: false }),
-        );
+      const response = await fetchAPI.fetchTrending();
+      if (response.ok) {
+        const data = await response.json();
+        const { results } = data;
+        return this.setState({ movies: results, isLoading: false });
+      }
+      return Promise.reject(
+        new Error(`Sorry. Something went wrong. Can't find anything.`),
+      );
     } catch (error) {
       this.setState({ error: error.message, isLoading: false });
     }

@@ -11,16 +11,22 @@ class MovieDetailsPage extends Component {
     error: null,
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     const { movieId } = this.props.match.params;
-    this.fetchMovieById(movieId);
+    await this.fetchMovieById(movieId);
   }
 
   fetchMovieById = async movieId => {
     try {
-      await fetchAPI
-        .fetchById(movieId)
-        .then(movie => this.setState({ movie, isLoading: false }));
+      const response = await fetchAPI.fetchById(movieId);
+
+      if (response.ok) {
+        const movie = await response.json();
+        return this.setState({ movie, isLoading: false });
+      }
+      return Promise.reject(
+        new Error(`Sorry. Something went wrong. Can't find anything.`),
+      );
     } catch (error) {
       this.setState({ error: error.message, isLoading: false });
     }
@@ -28,7 +34,7 @@ class MovieDetailsPage extends Component {
 
   handleGoBack = () => {
     const { location, history } = this.props;
-    history.push(location?.state?.from || history.push(routes.homePage));
+    history.push(location?.state?.from || routes.homePage);
   };
 
   render() {

@@ -10,14 +10,20 @@ class Reviews extends Component {
 
   async componentDidMount() {
     const { movieId } = this.props.match.params;
-    this.fetchReviews(movieId);
+    await this.fetchReviews(movieId);
   }
 
   fetchReviews = async movieId => {
     try {
-      await fetchAPI
-        .fetchReviewsById(movieId)
-        .then(({ results }) => this.setState({ reviews: results }));
+      const response = await fetchAPI.fetchReviewsById(movieId);
+      if (response.ok) {
+        const data = await response.json();
+        const { results } = data;
+        return this.setState({ reviews: results });
+      }
+      return Promise.reject(
+        new Error(`Sorry. Something went wrong. Can't find anything.`),
+      );
     } catch (error) {
       this.setState({ error: error.message });
     }

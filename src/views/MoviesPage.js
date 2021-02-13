@@ -16,22 +16,22 @@ class MoviesPage extends Component {
     error: null,
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     const { query } = getQueryParams(this.props.location.search);
     if (query) {
       this.setState({ isSearching: true });
-      this.fetchMovies(query);
+      await this.fetchMovies(query);
       return;
     }
-    this.fetchPopularMovies();
+    await this.fetchPopularMovies();
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps, prevState) {
     const { query: prevQuery } = getQueryParams(prevProps.location.search);
     const { query: nextQuery } = getQueryParams(this.props.location.search);
 
     if (prevQuery !== nextQuery && nextQuery) {
-      this.fetchMovies(nextQuery);
+      await this.fetchMovies(nextQuery);
       this.setState({ isSearching: true });
       return;
     }
@@ -40,15 +40,22 @@ class MoviesPage extends Component {
   fetchMovies = async query => {
     this.setState({ isLoading: true });
     try {
-      await fetchAPI.fetchByQuery(query).then(({ results }) => {
-        if (results.length === 0) {
+      const response = await fetchAPI.fetchByQuery(query);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.results.length === 0) {
           toast("Sorry, but we can't find anything for your query.");
           this.props.history.push(routes.moviesPage);
           this.setState({ isLoading: false });
           return;
         }
-        this.setState({ movies: results, isLoading: false });
-      });
+
+        return this.setState({ movies: data.results, isLoading: false });
+      }
+
+      return Promise.reject(
+        new Error(`Sorry. Something went wrong. Can't find anything.`),
+      );
     } catch (error) {
       this.setState({ error: error.message, isLoading: false });
     }
@@ -57,9 +64,15 @@ class MoviesPage extends Component {
   fetchPopularMovies = async () => {
     this.setState({ isLoading: false });
     try {
-      await fetchAPI.fetchPopular().then(({ results }) => {
-        this.setState({ movies: results });
-      });
+      const response = await fetchAPI.fetchPopular();
+      if (response.ok) {
+        const data = await response.json();
+        return this.setState({ movies: data.results });
+      }
+
+      return Promise.reject(
+        new Error(`Sorry. Something went wrong. Can't find anything.`),
+      );
     } catch (error) {
       this.setState({ error: error.message, isLoading: false });
     }
